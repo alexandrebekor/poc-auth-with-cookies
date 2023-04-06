@@ -20,3 +20,15 @@ export const signInRequest = async (data: SignInRequestData) => {
     },
   };
 };
+
+export const recoverUserInformation = async () => {
+  await delay();
+
+  return {
+    user: {
+      name: "Alexandre Bekor",
+      email: "staff@alexandrebekor.com",
+      avatar: "https://github.com/alexandrebekor.png",
+    },
+  };
+};

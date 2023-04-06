@@ -1,7 +1,8 @@
-import { signInRequest } from "@/services/auth";
+import { headers } from "@/lib/fetchWithContext";
+import { recoverUserInformation, signInRequest } from "@/services/auth";
 import Router from "next/router";
-import { setCookie } from "nookies";
-import { createContext, useState } from "react";
+import { parseCookies, setCookie } from "nookies";
+import { createContext, useEffect, useState } from "react";
 
 type AuthContextProps = {
   user: UserProps | null;
@@ -30,6 +31,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<UserProps | null>(null);
   const isAuthenticated = !!user;
 
+  useEffect(() => {
+    const { "poc-token": token } = parseCookies();
+
+    if (token) {
+      recoverUserInformation().then((response) => {
+        setUser(response.user);
+      });
+    }
+  });
+
   const signIn = async ({ email, password }: SignInData) => {
     const { token, user } = await signInRequest({
       email,
@@ -41,6 +52,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     });
 
     setUser(user);
+
+    headers["authorization"] = `Bearer ${token}`;
+    headers["teste"] = `456`;
 
     Router.push("/dashboard");
   };

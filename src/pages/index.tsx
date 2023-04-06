@@ -1,13 +1,16 @@
+import { AuthContext } from "@/contexts/AuthContext";
 import { Inter } from "@next/font/google";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const { register, handleSubmit } = useForm();
+  const { signIn } = useContext(AuthContext);
 
-  const handleSignIn = (data: {}) => {
-    console.log(data);
+  const handleSignIn = (data) => {
+    signIn(data);
   };
 
   return (
